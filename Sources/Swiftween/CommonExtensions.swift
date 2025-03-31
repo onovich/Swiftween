@@ -1,7 +1,7 @@
 import SwiftUI
 
 extension View {
-    func swiftween<T: Easable>(binding: Binding<T>, from: T, to target: T, duration: TimeInterval, easeType: EasingType, easeMode: EasingMode = .none) -> some View {
+    public func swiftween<T: Easable>(binding: Binding<T>, from: T, to target: T, duration: TimeInterval, easeType: EasingType, easeMode: EasingMode = .none) -> some View {
         let animator = Swiftween(from: from, to: target, duration: duration, easeType: easeType, easeMode: easeMode)
         animator.startAnimation()
 
