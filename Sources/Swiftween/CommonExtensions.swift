@@ -1,7 +1,7 @@
 import SwiftUI
 
 public extension View {
-     public func swiftween<T: Easable>(binding: Binding<T>, from: T, to target: T, duration: TimeInterval, easeType: EasingType, easeMode: EasingMode = .none) -> some View {
+    func swiftween<T: Easable>(binding: Binding<T>, from: T, to target: T, duration: TimeInterval, easeType: EasingType, easeMode: EasingMode = .none) -> some View {
         let animator = Swiftween(from: from, to: target, duration: duration, easeType: easeType, easeMode: easeMode)
         animator.startAnimation()
 
@@ -11,33 +11,34 @@ public extension View {
     }
 }
 
-extension Color: Easable {
-    static func ease(from: Color, to: Color, progress: Float, easeType: EasingType, easeMode: EasingMode) -> Color {
-        let start = from.cgColor.components ?? [0, 0, 0, 1]
-        let end = to.cgColor.components ?? [0, 0, 0, 1]
-        
-        // 根据 progress 计算插值
-        let r = CGFloat(start[0] + (end[0] - start[0]) * CGFloat(progress))
-        let g = CGFloat(start[1] + (end[1] - start[1]) * CGFloat(progress))
-        let b = CGFloat(start[2] + (end[2] - start[2]) * CGFloat(progress))
-        let a = CGFloat(start[3] + (end[3] - start[3]) * CGFloat(progress))
+import SwiftUI
 
-        return Color(red: r, green: g, blue: b, opacity: a)
+public extension CGColor {
+    static func ease(from: CGColor, to: CGColor, progress: Float, easeType: EasingType, easeMode: EasingMode) -> CGColor {
+        guard let fromComponents = from.components, let toComponents = to.components else {
+            return from
+        }
+        
+        let numComponents = min(fromComponents.count, toComponents.count)
+        var easedComponents: [CGFloat] = []
+        
+        for i in 0..<numComponents {
+            let easedValue = CGFloat.ease(from: fromComponents[i], to: toComponents[i], progress: progress, easeType: easeType, easeMode: easeMode)
+            easedComponents.append(easedValue)
+        }
+        
+        return CGColor(colorSpace: from.colorSpace ?? CGColorSpaceCreateDeviceRGB(), components: easedComponents) ?? from
     }
 }
 
-extension CGFloat: Easable {
+public extension CGFloat {
     static func ease(from: CGFloat, to: CGFloat, progress: Float, easeType: EasingType, easeMode: EasingMode) -> CGFloat {
-        // 基本的线性插值
         return from + (to - from) * CGFloat(progress)
     }
 }
 
-extension Double: Easable {
+public extension Double {
     static func ease(from: Double, to: Double, progress: Float, easeType: EasingType, easeMode: EasingMode) -> Double {
-        // 基本的线性插值
         return from + (to - from) * Double(progress)
     }
 }
-
-
