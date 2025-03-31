@@ -1,7 +1,7 @@
 import SwiftUI
 import Combine
 
-public class Swiftween<T: Easable>: ObservableObject {
+class Swiftween<T: Easable>: ObservableObject {
     @Published var animatedValue: T
     private var targetValue: T
     private var duration: TimeInterval
