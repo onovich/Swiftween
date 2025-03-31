@@ -5,7 +5,7 @@ public extension View {
         let animator = Swiftween(from: from, to: target, duration: duration, easeType: easeType, easeMode: easeMode)
         animator.startAnimation()
 
-         return self.onReceive(animator.$currentValue) { newValue in
+        return self.onReceive(animator.$currentValue) { newValue in
             binding.wrappedValue = newValue
         }
     }
